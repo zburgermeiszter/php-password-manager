@@ -1,0 +1,28 @@
+Password Manager
+
+The Brief
+
+We would like you to create a small application for users to manage their passwords.
+
+This application must be written using PHP and MySQL.
+
+Requirements
+
+1) A user should be able to authenticate
+a) Login, and
+b) Logout
+2) A logged in user should be able to:
+a) Create a new entry
+b) See a list of all their individual entries
+c) View and update their entry
+d) Delete their individual entries
+
+Deliverables
+
+Provide all files required by your application in order for it to work.
+Include a README file with setup and configuration instructions.
+
+Notes
+Please don’t use any 3rd-party PHP libraries/frameworks
+JavaScript libraries/frameworks like jQuery are fine
+

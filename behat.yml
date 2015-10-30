@@ -1,0 +1,7 @@
+default:
+  extensions:
+    Behat\MinkExtension:
+      base_url: http://api.local
+      sessions:
+        default:
+          goutte: ~
