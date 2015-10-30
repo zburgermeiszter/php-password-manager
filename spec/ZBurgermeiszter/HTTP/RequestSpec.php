@@ -11,4 +11,10 @@ class RequestSpec extends ObjectBehavior
     {
         $this->shouldHaveType('ZBurgermeiszter\HTTP\Request');
     }
+
+    function it_should_be_created_by_injecting_data()
+    {
+        //create($uri, $method = 'GET', $parameters = array(), $cookies = array(), $files = array(), $server = array(), $content = null)
+        //$this->create()
+    }
 }
