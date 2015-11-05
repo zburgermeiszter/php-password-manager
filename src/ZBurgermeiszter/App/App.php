@@ -11,25 +11,23 @@ class App
 
     public function __construct()
     {
-        $this->on('error', function ($e) {
-            $this->errorHandler($e);
+        set_error_handler(function($errno, $errstr, $errfile, $errline){
+            $this->emit('exception', new \Exception("PHP ERROR: " . $errno . " " . $errstr . " In file: " . $errfile . " on line " . $errline));
+        });
+
+        $this->on('exception', function ($e) {
+            $this->exceptionHandler($e);
         });
 
         $this->on('request', function () {
-            $this->run();
+            $context = \ZBurgermeiszter\App\Factories\ContextFactory::create();
+            $kernel = \ZBurgermeiszter\App\Factories\KernelFactory::create($context);
+
+            $kernel->emit('request', $context);
         });
     }
 
-    private function run()
-    {
-        $context = \ZBurgermeiszter\App\Factories\ContextFactory::create();
-        $kernel = \ZBurgermeiszter\App\Factories\KernelFactory::create();
-
-
-        $kernel->emit('request', $context);
-    }
-
-    private function errorHandler(\Exception $e)
+    private function exceptionHandler(\Exception $e)
     {
         echo new Response("Unhandled Exception: " . $e->getMessage(), 500);
         die();

@@ -14,7 +14,7 @@ class ServiceRepository
     public function getService($serviceName)
     {
         if (!array_key_exists($serviceName, $this->services)) {
-            throw new \Exception("Invalid service name ($serviceName)");
+            throw new \Exception("Service does not exit: $serviceName");
         }
         return $this->services[$serviceName];
     }

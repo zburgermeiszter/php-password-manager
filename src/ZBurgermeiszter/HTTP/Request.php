@@ -26,7 +26,7 @@ class Request
         return $request;
     }
 
-    public function load($uri, $method = 'GET', $headers = [], $parameters = [], $content = "", $server = [] )
+    public function load($uri, $method = 'GET', $headers = [], $parameters = [], $content = "", $server = [])
     {
         $this->uri = parse_url($uri);
         $this->headers = $headers;
@@ -34,7 +34,7 @@ class Request
         $this->content = $content;
         $this->server = $server;
 
-        switch($method) {
+        switch ($method) {
             case 'GET':
             case 'POST':
             case 'PUT':
@@ -58,6 +58,25 @@ class Request
             Accept-Language: hu-HU,hu;q=0.8,en-US;q=0.6,en;q=0.4
 
         */
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMethod()
+    {
+        return $this->method;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getUriPath()
+    {
+        if (array_key_exists('path', $this->uri)) {
+            return $this->uri['path'];
+        }
+        return null;
     }
 
 

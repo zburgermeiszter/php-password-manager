@@ -15,8 +15,8 @@ trait ExceptionAwareEventEmitterTrait
             $this->eetEmit($eventName, $payload);
         } catch (\Exception $e) {
 
-            if (array_key_exists('error', $this->eventsArray) && is_array($this->eventsArray['error'])) {
-                $this->emit('error', $e);
+            if (array_key_exists('exception', $this->eventsArray) && is_array($this->eventsArray['exception'])) {
+                $this->emit('exception', $e);
             } else {
                 throw $e;
             }

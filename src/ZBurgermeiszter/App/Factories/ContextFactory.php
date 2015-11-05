@@ -15,14 +15,7 @@ class ContextFactory
     {
         $request = Request::createFromGlobals();
         $response = new Response();
-        $serviceRepository = new ServiceRepository();
-
-
-        $configPath = getcwd() . "/../app/config.json";
-        $configService = new ConfigurationService($configPath);
-
-
-        $serviceRepository->registerService('config', $configService);
+        $serviceRepository = ServiceRepositoryFactory::create();
 
 
         return new Context($request, $response, $serviceRepository);

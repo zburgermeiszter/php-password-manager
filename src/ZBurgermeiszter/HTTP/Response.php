@@ -4,9 +4,9 @@ namespace ZBurgermeiszter\HTTP;
 
 class Response
 {
-    private $responseCode;
-    private $headers;
-    private $content;
+    protected $responseCode;
+    protected $headers;
+    protected $content;
 
     public function __construct($content = "", $responseCode = 200, $headers = [])
     {
@@ -15,7 +15,7 @@ class Response
         $this->content = $content;
 
 
-        if(!array_key_exists("Content-Type", $this->headers)) {
+        if(!array_key_exists("Content-Type", $this->headers) && $responseCode == 200) {
             $this->headers['Content-Type'] = "text/plain";
         }
 
