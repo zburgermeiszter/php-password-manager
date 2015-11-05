@@ -1,6 +1,6 @@
 <?php
-# sudo php -S localhost:80
+# sudo php -S localhost:80 -t web
 require_once('../vendor/autoload.php');
 
-var_dump($_GET);
-var_dump($_SERVER['REQUEST_METHOD']);
+$app = new \ZBurgermeiszter\App\App();
+$app->emit('request');
