@@ -10,9 +10,61 @@ class RouterService
 {
     private $routes = [];
 
+    private $preRoutes = [];
+
     public function routeRequest(Context $context)
     {
+        $preRouteController = $this->getPreRouteController($context);
+        $this->executeController($context, $preRouteController);
+
         $controller = $this->getRouteController($context);
+        $this->executeController($context, $controller);
+    }
+
+    public function registerRouteMiddlewareController(RouteControllerMiddlewareInterface $middleware)
+    {
+        $routes = $middleware::getRoute();
+        $routeTypeName = "routes";
+
+        if($routes === null) {
+            $routes = $middleware::getPreRoute();
+            $routeTypeName = "preRoutes";
+        }
+
+        $routeConfigType = gettype($routes);
+        switch($routeConfigType){
+            case 'string':
+                $this->{$routeTypeName}[$routes] = $middleware;
+                break;
+            case 'array':
+                foreach($routes as $route) {
+                    $this->{$routeTypeName}[$route] = $middleware;
+                }
+                break;
+            default:
+                throw new \Exception("Invalid route configuration format: $routeConfigType");
+
+        }
+
+    }
+
+    private function getPreRouteController(Context $context)
+    {
+        $requestRoute = $context->getRequestRoute();
+        $routeMatcher = $this->routeMatcherFactory($requestRoute);
+
+        foreach($this->preRoutes as $route => $routeController) {
+            $isRouteMatch = $routeMatcher($route);
+            if($isRouteMatch) {
+                return $routeController;
+            }
+        }
+
+        return null;
+    }
+
+    private function executeController(Context $context, $controller)
+    {
         switch(true) {
             case $controller instanceof MiddlewareInterface:
                 $controller->execute($context);
@@ -23,26 +75,6 @@ class RouterService
             default:
                 throw new \Exception("Invalid route controller type: " . get_class($controller));
         }
-    }
-
-    public function registerRouteMiddlewareController(RouteControllerMiddlewareInterface $middleware)
-    {
-        $routes = $middleware::getRoute();
-        $routeConfigType = gettype($routes);
-        switch($routeConfigType){
-            case 'string':
-                $this->routes[$routes] = $middleware;
-                break;
-            case 'array':
-                foreach($routes as $route) {
-                    $this->routes[$route] = $middleware;
-                }
-                break;
-            default:
-                throw new \Exception("Invalid route configuration format: $routeConfigType");
-
-        }
-
     }
 
     /**

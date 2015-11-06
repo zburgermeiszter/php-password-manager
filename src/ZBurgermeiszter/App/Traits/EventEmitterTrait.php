@@ -10,8 +10,8 @@ trait EventEmitterTrait
     public function emit($eventName, $payload = null)
     {
         if (array_key_exists($eventName, $this->eventsArray) && is_array($this->eventsArray[$eventName])) {
-            foreach($this->eventsArray[$eventName] as $eventListener) {
-                if($eventListener instanceof \Closure) {
+            foreach ($this->eventsArray[$eventName] as $eventListener) {
+                if ($eventListener instanceof \Closure) {
                     $eventListener($payload);
                 }
             }
@@ -26,7 +26,7 @@ trait EventEmitterTrait
 
     private function notifyAfterAlls()
     {
-        foreach($this->afterAlls as $afterClosure) {
+        foreach ($this->afterAlls as $afterClosure) {
             $afterClosure();
         }
     }

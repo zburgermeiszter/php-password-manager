@@ -25,12 +25,11 @@ class RouterServiceFactory
         $projectRoot = dirname(getcwd()) . '/src/';
         $namespaceRoot = dirname(dirname(str_replace('\\', '/', __NAMESPACE__)));
         $namespaceSuffix = '/*/Middlewares';
-        $middlewareFiles = glob($projectRoot.$namespaceRoot.$namespaceSuffix.'/*');
+        $middlewareFiles = glob($projectRoot . $namespaceRoot . $namespaceSuffix . '/*');
 
-        foreach($middlewareFiles as $file) {
+        foreach ($middlewareFiles as $file) {
 
-            $className = str_replace('/','\\', dirname(str_replace($projectRoot, '', $file)).'/'.pathinfo($file, PATHINFO_FILENAME));
-            //$className = str_replace('/','\\', $namespaceRoot.'/'.pathinfo($file, PATHINFO_FILENAME));
+            $className = str_replace('/', '\\', dirname(str_replace($projectRoot, '', $file)) . '/' . pathinfo($file, PATHINFO_FILENAME));
             require_once($file);
             $controller = new $className;
             $router->registerRouteMiddlewareController($controller);

@@ -7,7 +7,13 @@ use ZBurgermeiszter\App\Interfaces\RouteControllerMiddlewareInterface;
 
 abstract class AbstractRouteControllerMiddleware implements RouteControllerMiddlewareInterface
 {
-    protected static $route = '#';
+    protected  static $preRoute = null;
+    protected static $route = null;
+
+    public static function getPreRoute()
+    {
+        return static::$preRoute;
+    }
 
     public static function getRoute()
     {
