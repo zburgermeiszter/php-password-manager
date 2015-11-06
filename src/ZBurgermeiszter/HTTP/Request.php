@@ -68,6 +68,17 @@ class Request
         return $this->method;
     }
 
+    public function getHeader($headerName)
+    {
+        foreach ($this->headers as $key => $val) {
+            if ($key === $headerName) {
+                return $val;
+            }
+        }
+
+        return false;
+    }
+
     /**
      * @return string|null
      */

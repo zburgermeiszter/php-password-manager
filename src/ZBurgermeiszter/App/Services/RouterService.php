@@ -17,6 +17,9 @@ class RouterService
         $preRouteController = $this->getPreRouteController($context);
         $this->executeController($context, $preRouteController);
 
+        // If the response has been set to final state in the pre-routing, do not run the route controller.
+        if ($context->getResponse()->isFinal()) return;
+
         $controller = $this->getRouteController($context);
         $this->executeController($context, $controller);
     }
@@ -60,7 +63,7 @@ class RouterService
             }
         }
 
-        return null;
+        return false;
     }
 
     private function executeController(Context $context, $controller)
@@ -72,9 +75,10 @@ class RouterService
             case $controller instanceof \Closure:
                 $controller($context);
                 break;
-            default:
-                throw new \Exception("Invalid route controller type: " . get_class($controller));
+            //default:
+            //throw new \Exception("Invalid route controller type: " . get_class($controller));
         }
+        return false;
     }
 
     /**

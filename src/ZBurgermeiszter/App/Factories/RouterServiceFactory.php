@@ -14,7 +14,6 @@ class RouterServiceFactory
         static::autoloadMiddlewares($router);
 
         return $router;
-        //$router->on()
     }
 
     private static function autoloadMiddlewares(RouterService $router)

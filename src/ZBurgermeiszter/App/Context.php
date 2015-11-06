@@ -40,6 +40,10 @@ class Context {
         return $this->getRequest()->getUriPath();
     }
 
+    public function getRequestHeader($headerName)
+    {
+        return $this->getRequest()->getHeader($headerName);
+    }
 
     /**
      * @param Response $response

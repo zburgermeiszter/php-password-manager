@@ -5,6 +5,7 @@
     "port": 3306,
     "username": "root",
     "password": "root",
-    "database": "passwordmanager"
+    "database": "passwordmanager",
+    "charset": "utf8"
   }
 }

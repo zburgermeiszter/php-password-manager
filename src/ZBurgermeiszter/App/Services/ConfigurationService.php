@@ -11,6 +11,11 @@ class ConfigurationService
         $this->config = json_decode(file_get_contents($configJSONPath), true);
     }
 
+    public static function create($configJSONPath)
+    {
+        return new static($configJSONPath);
+    }
+
     public function get($itemName)
     {
         if (!isset($this->config[$itemName])) {

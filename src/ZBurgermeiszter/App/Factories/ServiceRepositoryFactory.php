@@ -9,19 +9,17 @@ class ServiceRepositoryFactory
 {
     public static function create()
     {
-        $self = new static;
+
         $serviceRepository = new ServiceRepository();
 
-        $serviceRepository->registerService('config', $self->createConfigService());
+        $configService = ConfigurationService::create(getcwd() . "/../app/config.json");
+        $databaseConfig = $configService->get('database');
+
+        $serviceRepository->registerService('config', $configService);
         $serviceRepository->registerService('router', RouterServiceFactory::create());
+        $serviceRepository->registerService('database', DatabaseServiceFactory::create($databaseConfig));
 
         return $serviceRepository;
 
-    }
-
-    private function createConfigService()
-    {
-        $configPath = getcwd() . "/../app/config.json";
-        return new ConfigurationService($configPath);
     }
 }
