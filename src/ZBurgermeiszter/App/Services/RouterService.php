@@ -5,6 +5,7 @@ namespace ZBurgermeiszter\App\Services;
 use ZBurgermeiszter\App\Context;
 use ZBurgermeiszter\App\Interfaces\MiddlewareInterface;
 use ZBurgermeiszter\App\Interfaces\RouteControllerMiddlewareInterface;
+use ZBurgermeiszter\HTTP\JSONResponse;
 
 class RouterService
 {
@@ -98,7 +99,10 @@ class RouterService
             }
         }
 
-        throw new \Exception("No route found: $requestRoute");
+        $context->setResponse(JSONResponse::createFinal([
+            'error' => "Route not found: $requestRoute"
+        ], 404));
+        return false;
     }
 
     /**

@@ -2,6 +2,8 @@
 
 namespace ZBurgermeiszter\App\Factories;
 
+use ZBurgermeiszter\App\Services\DatabaseService;
+
 class DatabaseServiceFactory
 {
     public static function create($databaseConfig)
@@ -22,6 +24,8 @@ class DatabaseServiceFactory
         $dsn = vsprintf($dsnTemplate, $dsnValues);
 
 
-        return new \PDO($dsn, $databaseConfig['username'], $databaseConfig['password']);
+        $pdo = new \PDO($dsn, $databaseConfig['username'], $databaseConfig['password']);
+
+        return new DatabaseService($pdo);
     }
 }
