@@ -45,14 +45,14 @@ This application must be written using PHP and MySQL.
 
 ## Requirements
 
-1. A user should be able to authenticate
-  * Login
-  * Logout
+1. A user should be able to authenticate  
+* Login
+* Logout
 2. A logged in user should be able to
-  * Create a new entry
-  * See a list of all their individual entries
-  * View and update their entry
-  * Delete their individual entries
+* Create a new entry
+* See a list of all their individual entries
+* View and update their entry
+* Delete their individual entries
 
 ## Deliverables
 
