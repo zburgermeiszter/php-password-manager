@@ -40,4 +40,19 @@ abstract class AbstractDatabaseRepository implements DatabaseRepositoryInterface
         return $stmt->execute($parameters);
     }
 
+    protected function execInsert($sql, $parameters)
+    {
+        $connection = $this->getDatabaseConnection();
+
+        $stmt = $connection->prepare($sql);
+
+        $insertSuccess = $stmt->execute($parameters);
+
+        if (!$insertSuccess) {
+            return false;
+        }
+
+        return $connection->lastInsertId();
+    }
+
 }

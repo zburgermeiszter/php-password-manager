@@ -15,6 +15,11 @@ class DatabaseRepositoryLoaderService
         $this->databaseService = $databaseService;
     }
 
+    /**
+     * @param $repositoryAddress
+     * @return DatabaseRepositoryInterface
+     * @throws \Exception
+     */
     public function getRepository($repositoryAddress)
     {
 

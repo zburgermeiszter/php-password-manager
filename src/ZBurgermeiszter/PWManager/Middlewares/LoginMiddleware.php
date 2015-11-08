@@ -5,7 +5,6 @@ namespace ZBurgermeiszter\PWManager\Middlewares;
 use ZBurgermeiszter\App\Abstracts\AbstractRouteControllerMiddleware;
 use ZBurgermeiszter\App\Context;
 use ZBurgermeiszter\App\Services\ConfigurationService;
-use ZBurgermeiszter\App\Services\DatabaseRepositoryLoaderService;
 use ZBurgermeiszter\HTTP\JSONResponse;
 use ZBurgermeiszter\HTTP\Response;
 use ZBurgermeiszter\PWManager\DatabaseRepositories\UsersRepository;
@@ -34,7 +33,6 @@ class LoginMiddleware extends AbstractRouteControllerMiddleware
     private function authenticateCredentials(Context $context, $credentials)
     {
         /**
-         * @var $databaseRepositoryLoader DatabaseRepositoryLoaderService
          * @var $userRepository UsersRepository
          * @var $configService ConfigurationService
          */
@@ -49,8 +47,7 @@ class LoginMiddleware extends AbstractRouteControllerMiddleware
             return JSONResponse::createFinal([], 403);
         };
 
-        $databaseRepositoryLoader = $context->getService('databaseRepositoryLoader');
-        $userRepository = $databaseRepositoryLoader->getRepository('ZBurgermeiszter:PWManager:User');
+        $userRepository = $context->getDatabaseRepository('ZBurgermeiszter:PWManager:User');
 
         $configService = $context->getServiceRepository()->getService('config');
         $sessionConfig = $configService->get('session');

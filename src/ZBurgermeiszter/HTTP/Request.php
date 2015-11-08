@@ -33,18 +33,7 @@ class Request
         $this->parameters = $parameters;
         $this->content = $content;
         $this->server = $server;
-
-        switch ($method) {
-            case 'GET':
-            case 'POST':
-            case 'PUT':
-            case 'DELETE':
-                $this->method = $method;
-                break;
-            default:
-                throw new \Exception("Unsupported request ($method)");
-        }
-
+        $this->method = $method;
     }
 
     /**
@@ -65,6 +54,18 @@ class Request
 
         return false;
     }
+
+    public function getContent()
+    {
+        if ($this->getHeader('Content-Type') == 'application/json') {
+            if (null !== $decodedJSON = json_decode($this->content, true)) {
+                return $decodedJSON;
+            }
+        }
+
+        return $this->content;
+    }
+
 
     /**
      * @return string|null

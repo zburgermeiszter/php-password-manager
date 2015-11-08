@@ -3,6 +3,7 @@
 namespace ZBurgermeiszter\PWManager\DatabaseRepositories;
 
 use ZBurgermeiszter\App\Abstracts\AbstractDatabaseRepository;
+use ZBurgermeiszter\PWManager\DataStructures\Credentials;
 use ZBurgermeiszter\PWManager\DataStructures\User;
 
 class CredentialsRepository extends AbstractDatabaseRepository
@@ -13,6 +14,35 @@ class CredentialsRepository extends AbstractDatabaseRepository
                 FROM `credentials`
                 WHERE `user` = ?";
 
-        return $this->execAndFetchAll($sql, [$user]);
+        $credentialsList = $this->execAndFetchAll($sql, [$user]);
+
+        if (!$credentialsList) {
+            return $credentialsList;
+        }
+
+        $result = [];
+
+        foreach ($credentialsList as $credential) {
+            $result[] = new Credentials($credential);
+        }
+
+        return $result;
     }
+
+    public function addCredentials(User $user, Credentials $credentials)
+    {
+        $sql = "INSERT INTO `credentials`
+                (`user`, `site`, `username`, `password`)
+                VALUES
+                (?, ?, ?, ?);";
+
+        return $this->execInsert($sql, [
+            $user->getId(),
+            $credentials->getSite(),
+            $credentials->getUsername(),
+            $credentials->getPassword()
+        ]);
+
+    }
+
 }

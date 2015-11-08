@@ -24,9 +24,9 @@ abstract class AbstractRouteControllerMiddleware implements RouteControllerMiddl
 
     public function execute(Context $context)
     {
-        $httpMethodFunctionPrefix = 'method_';
+        $httpMethodFunctionPrefix = 'http';
 
-        $requestMethod = strtolower($context->getRequest()->getMethod());
+        $requestMethod = strtoupper($context->getRequest()->getMethod());
 
         if (!method_exists($this, $httpMethodFunctionPrefix . $requestMethod)) {
             return $context->setResponse(JSONResponse::createFinal([

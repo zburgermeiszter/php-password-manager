@@ -1,6 +1,8 @@
 <?php
 namespace ZBurgermeiszter\App;
 
+use ZBurgermeiszter\App\Interfaces\DatabaseRepositoryInterface;
+use ZBurgermeiszter\App\Services\DatabaseRepositoryLoaderService;
 use ZBurgermeiszter\App\Services\RouterService;
 use ZBurgermeiszter\App\Services\ServiceRepository;
 use ZBurgermeiszter\App\Services\SessionService;
@@ -74,6 +76,20 @@ class Context {
     public function getService($serviceName)
     {
         return $this->getServiceRepository()->getService($serviceName);
+    }
+
+    /**
+     * @param $repositoryAddress
+     * @return DatabaseRepositoryInterface
+     * @throws \Exception
+     */
+    public function getDatabaseRepository($repositoryAddress)
+    {
+        /**
+         * @var $databaseRepositoryLoader DatabaseRepositoryLoaderService
+         */
+        $databaseRepositoryLoader = $this->getService('databaseRepositoryLoader');
+        return $databaseRepositoryLoader->getRepository($repositoryAddress);
     }
 
     /**

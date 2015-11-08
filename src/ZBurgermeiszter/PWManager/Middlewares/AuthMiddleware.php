@@ -4,7 +4,6 @@ namespace ZBurgermeiszter\PWManager\Middlewares;
 
 use ZBurgermeiszter\App\Abstracts\AbstractRouteControllerMiddleware;
 use ZBurgermeiszter\App\Context;
-use ZBurgermeiszter\App\Services\DatabaseRepositoryLoaderService;
 use ZBurgermeiszter\HTTP\JSONResponse;
 use ZBurgermeiszter\PWManager\DatabaseRepositories\UsersRepository;
 
@@ -17,11 +16,9 @@ class AuthMiddleware extends AbstractRouteControllerMiddleware
     public function execute(Context $context)
     {
         /**
-         * @var $databaseRepositoryLoader DatabaseRepositoryLoaderService
          * @var $userRepository UsersRepository
          */
-        $databaseRepositoryLoader = $context->getService('databaseRepositoryLoader');
-        $userRepository = $databaseRepositoryLoader->getRepository('ZBurgermeiszter:PWManager:Users');
+        $userRepository = $context->getDatabaseRepository('ZBurgermeiszter:PWManager:Users');
 
         $token = $context->getRequest()->getHeader('X-Token');
         $user = $userRepository->getUserByToken($token);
