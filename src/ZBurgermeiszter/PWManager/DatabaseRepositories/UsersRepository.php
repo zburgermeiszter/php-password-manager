@@ -33,6 +33,7 @@ class UsersRepository extends AbstractDatabaseRepository
         $sql = "SELECT users.* FROM `sessions`
                 RIGHT JOIN users ON sessions.user = users.id
                 WHERE sessions.token = ?
+                AND sessions.valid_until >= NOW()
                 AND users.active = 1
                 LIMIT 1";
 
@@ -55,13 +56,26 @@ class UsersRepository extends AbstractDatabaseRepository
                 VALUES
                   (?, ?, ?);";
 
-        $insertSuccess = $this->exec($sql, [$user, $token, $validUntil->format("Y-m-d H:i:s")]);
+        $insertSuccess = $this->exec($sql, [$user, $token, $validUntil->format('c')]);
 
         if (!$insertSuccess) {
             return false;
         }
 
         return $token;
+    }
+
+    public function updateToken($token, \DateTime $validUntil)
+    {
+        $sql = "UPDATE `sessions`
+                SET valid_until = ?
+                WHERE `token` = ?";
+
+        return $this->execUpdate($sql, [
+            $validUntil->format('c'),
+            $token
+        ]);
+
     }
 
     private function getUser($username, $password)

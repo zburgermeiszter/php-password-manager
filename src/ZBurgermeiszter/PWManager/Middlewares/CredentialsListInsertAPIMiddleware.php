@@ -8,7 +8,7 @@ use ZBurgermeiszter\HTTP\JSONResponse;
 use ZBurgermeiszter\PWManager\DatabaseRepositories\CredentialsRepository;
 use ZBurgermeiszter\PWManager\DataStructures\Credentials;
 
-class CredentialsAPIMiddleware extends AbstractRouteControllerMiddleware
+class CredentialsListInsertAPIMiddleware extends AbstractRouteControllerMiddleware
 {
     protected static $route = [
         '/credentials'
