@@ -3,7 +3,7 @@
 ## IMPORTANT
 
 This is just a technical test task.  
-This project do **NOT** use any password encryption.
+This project do **NOT** use any password encryption.  
 Using it in production mode is **NOT RECOMMENDED**
 
 ## Description
