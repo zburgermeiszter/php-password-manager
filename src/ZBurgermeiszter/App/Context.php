@@ -3,6 +3,7 @@ namespace ZBurgermeiszter\App;
 
 use ZBurgermeiszter\App\Services\RouterService;
 use ZBurgermeiszter\App\Services\ServiceRepository;
+use ZBurgermeiszter\App\Services\SessionService;
 use ZBurgermeiszter\HTTP\Request;
 use ZBurgermeiszter\HTTP\Response;
 
@@ -51,6 +52,7 @@ class Context {
     public function setResponse($response)
     {
         $this->response = $response;
+        return true;
     }
 
     /**
@@ -81,6 +83,15 @@ class Context {
     public function getRouter()
     {
         return $this->getServiceRepository()->getService('router');
+    }
+
+    /**
+     * @return SessionService
+     * @throws \Exception
+     */
+    public function getSession()
+    {
+        return $this->getServiceRepository()->getService('session');
     }
 
 }

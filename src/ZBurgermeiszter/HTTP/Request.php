@@ -45,23 +45,10 @@ class Request
                 throw new \Exception("Unsupported request ($method)");
         }
 
-        /*
-             GET / HTTP/1.1
-            Host: localhost:8000
-            Connection: keep-alive
-            Cache-Control: max-age=0
-            Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,;q=0.8
-            X-FirePHP-Version: 0.0.6
-            Upgrade-Insecure-Requests: 1
-            User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2490.80 Safari/537.36
-            Accept-Encoding: gzip, deflate, sdch
-            Accept-Language: hu-HU,hu;q=0.8,en-US;q=0.6,en;q=0.4
-
-        */
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getMethod()
     {
@@ -84,10 +71,11 @@ class Request
      */
     public function getUriPath()
     {
-        if (array_key_exists('path', $this->uri)) {
-            return $this->uri['path'];
+        if (!array_key_exists('path', $this->uri)) {
+            return null;
         }
-        return null;
+
+        return $this->uri['path'];
     }
 
 

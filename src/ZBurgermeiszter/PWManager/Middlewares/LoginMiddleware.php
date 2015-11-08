@@ -8,7 +8,7 @@ use ZBurgermeiszter\App\Services\ConfigurationService;
 use ZBurgermeiszter\App\Services\DatabaseRepositoryLoaderService;
 use ZBurgermeiszter\HTTP\JSONResponse;
 use ZBurgermeiszter\HTTP\Response;
-use ZBurgermeiszter\PWManager\DatabaseRepositories\UserRepository;
+use ZBurgermeiszter\PWManager\DatabaseRepositories\UsersRepository;
 
 class LoginMiddleware extends AbstractRouteControllerMiddleware
 {
@@ -35,7 +35,7 @@ class LoginMiddleware extends AbstractRouteControllerMiddleware
     {
         /**
          * @var $databaseRepositoryLoader DatabaseRepositoryLoaderService
-         * @var $databaseRepository UserRepository
+         * @var $userRepository UsersRepository
          * @var $configService ConfigurationService
          */
 
@@ -50,7 +50,7 @@ class LoginMiddleware extends AbstractRouteControllerMiddleware
         };
 
         $databaseRepositoryLoader = $context->getService('databaseRepositoryLoader');
-        $databaseRepository = $databaseRepositoryLoader->getRepository('ZBurgermeiszter:PWManager:User');
+        $userRepository = $databaseRepositoryLoader->getRepository('ZBurgermeiszter:PWManager:User');
 
         $configService = $context->getServiceRepository()->getService('config');
         $sessionConfig = $configService->get('session');
@@ -62,7 +62,7 @@ class LoginMiddleware extends AbstractRouteControllerMiddleware
 
         $validUntil = new \DateTime("+$validityDays days");
 
-        $session = $databaseRepository->createSession($credentials['user'], $credentials['pass'], $validUntil);
+        $session = $userRepository->createSession($credentials['user'], $credentials['pass'], $validUntil);
 
         $responseCode = $session ? 200 : 403;
 

@@ -20,4 +20,24 @@ abstract class AbstractDatabaseRepository implements DatabaseRepositoryInterface
         return $this->databaseService->getConnection();
     }
 
+    protected function execAndFetch($sql, $parameters)
+    {
+        $stmt = $this->getDatabaseConnection()->prepare($sql);
+        $stmt->execute($parameters);
+        return $stmt->fetch(\PDO::FETCH_ASSOC);
+    }
+
+    protected function execAndFetchAll($sql, $parameters)
+    {
+        $stmt = $this->getDatabaseConnection()->prepare($sql);
+        $stmt->execute($parameters);
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
+    protected function exec($sql, $parameters)
+    {
+        $stmt = $this->getDatabaseConnection()->prepare($sql);
+        return $stmt->execute($parameters);
+    }
+
 }

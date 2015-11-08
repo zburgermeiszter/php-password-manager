@@ -5,6 +5,7 @@ namespace ZBurgermeiszter\App\Factories;
 use ZBurgermeiszter\App\Services\ConfigurationService;
 use ZBurgermeiszter\App\Services\DatabaseRepositoryLoaderService;
 use ZBurgermeiszter\App\Services\ServiceRepository;
+use ZBurgermeiszter\App\Services\SessionService;
 
 class ServiceRepositoryFactory
 {
@@ -22,6 +23,7 @@ class ServiceRepositoryFactory
         $serviceRepository->registerService('router', RouterServiceFactory::create());
         $serviceRepository->registerService('database', $databaseService);
         $serviceRepository->registerService('databaseRepositoryLoader', $databaseRepositoryService);
+        $serviceRepository->registerService('session', SessionService::create([]));
 
         return $serviceRepository;
 

@@ -18,7 +18,7 @@ class ConfigurationService
 
     public function get($itemName)
     {
-        if (!isset($this->config[$itemName])) {
+        if (!array_key_exists($itemName, $this->config)) {
             return null;
         }
 
