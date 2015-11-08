@@ -24,6 +24,7 @@ PHP 5.5 recommended, minimum required 5.4.
 
 ## Setup
 
+Import the `sql/passwordmanager.sql` file on your MySQL server.  
 Configure your MySQL details in the `app/config.json` file.
 
 ## Run
