@@ -30,18 +30,18 @@ class RouterService
         $routes = $middleware::getRoute();
         $routeTypeName = "routes";
 
-        if($routes === null) {
+        if ($routes === null) {
             $routes = $middleware::getPreRoute();
             $routeTypeName = "preRoutes";
         }
 
         $routeConfigType = gettype($routes);
-        switch($routeConfigType){
+        switch ($routeConfigType) {
             case 'string':
                 $this->{$routeTypeName}[$routes] = $middleware;
                 break;
             case 'array':
-                foreach($routes as $route) {
+                foreach ($routes as $route) {
                     $this->{$routeTypeName}[$route] = $middleware;
                 }
                 break;
@@ -57,9 +57,9 @@ class RouterService
         $requestRoute = $context->getRequestRoute();
         $routeMatcher = $this->routeMatcherFactory($requestRoute);
 
-        foreach($this->preRoutes as $route => $routeController) {
+        foreach ($this->preRoutes as $route => $routeController) {
             $isRouteMatch = $routeMatcher($route);
-            if($isRouteMatch) {
+            if ($isRouteMatch) {
                 return $routeController;
             }
         }
@@ -69,7 +69,7 @@ class RouterService
 
     private function executeController(Context $context, $controller)
     {
-        switch(true) {
+        switch (true) {
             case $controller instanceof MiddlewareInterface:
                 $controller->execute($context);
                 break;
@@ -92,9 +92,9 @@ class RouterService
         $requestRoute = $context->getRequestRoute();
         $routeMatcher = $this->routeMatcherFactory($requestRoute);
 
-        foreach($this->routes as $route => $routeController) {
+        foreach ($this->routes as $route => $routeController) {
             $isRouteMatch = $routeMatcher($route);
-            if($isRouteMatch) {
+            if ($isRouteMatch) {
                 return $routeController;
             }
         }
@@ -111,13 +111,14 @@ class RouterService
      */
     private function routeMatcherFactory($requestRoute)
     {
-        return function ($routePattern) use($requestRoute) {
+        return function ($routePattern) use ($requestRoute) {
 
-            set_error_handler(function() {}, E_WARNING);
+            set_error_handler(function () {
+            }, E_WARNING);
             $isRegex = (@preg_match($routePattern, $requestRoute, $matches) !== false);
             restore_error_handler();
 
-            if($isRegex) {
+            if ($isRegex) {
                 return (bool)$matches;
             } else {
                 return ($routePattern === $requestRoute);
