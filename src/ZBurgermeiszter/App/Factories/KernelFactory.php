@@ -15,9 +15,6 @@ class KernelFactory
 
         $kernel->on('request', function () use ($context, $router) {
             $router->routeRequest($context);
-            /*var_dump($payload);
-            echo __FILE__;*/
-            //echo $context->getResponse();
         });
 
         $kernel->registerAfterAll(function() use ($context){
