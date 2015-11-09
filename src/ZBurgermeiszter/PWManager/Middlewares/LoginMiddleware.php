@@ -47,7 +47,7 @@ class LoginMiddleware extends AbstractRouteControllerMiddleware
             return JSONResponse::createFinal([], 403);
         };
 
-        $userRepository = $context->getDatabaseRepository('ZBurgermeiszter:PWManager:User');
+        $userRepository = $context->getDatabaseRepository('ZBurgermeiszter:PWManager:Users');
 
         $configService = $context->getServiceRepository()->getService('config');
         $sessionConfig = $configService->get('session');
