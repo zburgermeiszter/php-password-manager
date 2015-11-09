@@ -67,6 +67,10 @@ class RouterService
         return false;
     }
 
+    /**
+     * @param Context $context
+     * @param $controller
+     */
     private function executeController(Context $context, $controller)
     {
         switch (true) {
@@ -76,10 +80,7 @@ class RouterService
             case $controller instanceof \Closure:
                 $controller($context);
                 break;
-            //default:
-            //throw new \Exception("Invalid route controller type: " . get_class($controller));
         }
-        return false;
     }
 
     /**
