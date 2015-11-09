@@ -3,7 +3,6 @@
 namespace ZBurgermeiszter\PWManager\Middlewares;
 
 use ZBurgermeiszter\App\Abstracts\AbstractRouteControllerMiddleware;
-use ZBurgermeiszter\App\Context;
 use ZBurgermeiszter\HTTP\JSONResponse;
 use ZBurgermeiszter\PWManager\DatabaseRepositories\CredentialsRepository;
 use ZBurgermeiszter\PWManager\DataStructures\Credentials;
@@ -14,43 +13,43 @@ class CredentialsListInsertAPIMiddleware extends AbstractRouteControllerMiddlewa
         '/credentials'
     ];
 
-    protected function httpGET(Context $context)
+    protected function httpGET()
     {
         /**
          * @var $credentialsRepository CredentialsRepository
          */
 
-        $user = $context->getSession()->get('user');
+        $user = $this->context->getSession()->get('user');
 
-        $credentialsRepository = $context->getDatabaseRepository('ZBurgermeiszter:PWManager:Credentials');
+        $credentialsRepository = $this->context->getDatabaseRepository('ZBurgermeiszter:PWManager:Credentials');
 
         $credentials = $credentialsRepository->listCredentials($user);
 
-        $context->setResponse(JSONResponse::createFinal($credentials, 200));
+        $this->context->setResponse(JSONResponse::createFinal($credentials, 200));
     }
 
-    protected function httpPOST(Context $context)
+    protected function httpPOST()
     {
         /**
          * @var $credentialsRepository CredentialsRepository
          */
-        $requestContent = $context->getRequest()->getContent();
-        $user = $context->getSession()->get('user');
+        $requestContent = $this->context->getRequest()->getContent();
+        $user = $this->context->getSession()->get('user');
 
         $credentials = new Credentials($requestContent);
 
-        $credentialsRepository = $context->getDatabaseRepository('ZBurgermeiszter:PWManager:Credentials');
+        $credentialsRepository = $this->context->getDatabaseRepository('ZBurgermeiszter:PWManager:Credentials');
         $credentialID = $credentialsRepository->addCredentials($user, $credentials);
 
         if (!$credentialID) {
-            return $context->setResponse($response = JSONResponse::createFinal([
+            return $this->context->setResponse($response = JSONResponse::createFinal([
                 'error' => 'Failed to save credentials. Please try again.'
             ], 500));
         }
 
         $credentials->setId($credentialID);
 
-        return $context->setResponse(JSONResponse::createFinal($credentials));
+        return $this->context->setResponse(JSONResponse::createFinal($credentials));
     }
 
 }

@@ -13,6 +13,8 @@ class RouterService
 
     private $preRoutes = [];
 
+    private $currentRoute = '';
+
     public function routeRequest(Context $context)
     {
         $preRouteController = $this->getPreRouteController($context);
@@ -114,17 +116,32 @@ class RouterService
     {
         return function ($routePattern) use ($requestRoute) {
 
-            set_error_handler(function () {
-            }, E_WARNING);
+            set_error_handler(function () {}, E_WARNING);
             $isRegex = (@preg_match($routePattern, $requestRoute, $matches) !== false);
             restore_error_handler();
 
             if ($isRegex) {
-                return (bool)$matches;
+                $result = (bool)$matches;
             } else {
-                return ($routePattern === $requestRoute);
+                $result = ($routePattern === $requestRoute);
             }
+
+            if($result) {
+                $this->currentRoute = $routePattern;
+            }
+
+            return $result;
         };
     }
+
+    /**
+     * @return string
+     */
+    public function getCurrentRoute()
+    {
+        return $this->currentRoute;
+    }
+
+
 
 }

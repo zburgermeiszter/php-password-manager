@@ -3,7 +3,6 @@
 namespace ZBurgermeiszter\PWManager\Middlewares;
 
 use ZBurgermeiszter\App\Abstracts\AbstractRouteControllerMiddleware;
-use ZBurgermeiszter\App\Context;
 use ZBurgermeiszter\App\Services\ConfigurationService;
 use ZBurgermeiszter\HTTP\JSONResponse;
 use ZBurgermeiszter\PWManager\DatabaseRepositories\UsersRepository;
@@ -14,39 +13,39 @@ class AuthMiddleware extends AbstractRouteControllerMiddleware
         '/credentials'
     ];
 
-    public function execute(Context $context)
+    protected function http()
     {
         /**
          * @var $userRepository UsersRepository
          */
-        $userRepository = $context->getDatabaseRepository('ZBurgermeiszter:PWManager:Users');
+        $userRepository = $this->context->getDatabaseRepository('ZBurgermeiszter:PWManager:Users');
 
-        $token = $context->getRequest()->getHeader('X-Token');
+        $token = $this->context->getRequest()->getHeader('X-Token');
         $user = $userRepository->getUserByToken($token);
 
         if (!$user) {
-            return $context->setResponse(JSONResponse::createFinal([
+            return $this->context->setResponse(JSONResponse::createFinal([
                 'error' => 'Invalid token'
             ], 403));
         }
 
-        $this->updateValidUntil($context, $token);
+        $this->updateValidUntil($token);
 
-        $context->getSession()->set('user', $user);
+        $this->context->getSession()->set('user', $user);
 
         return true;
     }
 
-    private function updateValidUntil(Context $context, $token)
+    private function updateValidUntil($token)
     {
         /**
          * @var $userRepository UsersRepository
          * @var $configService ConfigurationService
          */
-        $configService = $context->getServiceRepository()->getService('config');
+        $configService = $this->context->getServiceRepository()->getService('config');
         $sessionConfig = $configService->get('session');
 
-        $userRepository = $context->getDatabaseRepository('ZBurgermeiszter:PWManager:Users');
+        $userRepository = $this->context->getDatabaseRepository('ZBurgermeiszter:PWManager:Users');
 
         $validityDays = 0;
         if (array_key_exists('token_validity_days', $sessionConfig)) {

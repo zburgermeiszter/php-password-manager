@@ -3,7 +3,6 @@
 namespace ZBurgermeiszter\PWManager\Middlewares;
 
 use ZBurgermeiszter\App\Abstracts\AbstractRouteControllerMiddleware;
-use ZBurgermeiszter\App\Context;
 use ZBurgermeiszter\HTTP\RedirectResponse;
 
 class IndexMiddleware extends AbstractRouteControllerMiddleware
@@ -13,10 +12,10 @@ class IndexMiddleware extends AbstractRouteControllerMiddleware
         '/index.php'
     ];
 
-    public function execute(Context $context)
+    protected function http()
     {
         $response = new RedirectResponse('/static/index.html');
-        $context->setResponse($response);
+        $this->context->setResponse($response);
     }
 
 }
