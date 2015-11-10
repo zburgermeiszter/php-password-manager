@@ -31,4 +31,25 @@ class CredentialsViewUpdateDeleteAPIMiddleware extends AbstractRouteControllerMi
         return $this->context->setResponse($response = JSONResponse::createFinal($credential));
     }
 
+    protected function httpPUT()
+    {
+        /**
+         * @var $credentialsRepository CredentialsRepository
+         */
+
+        $matches = $this->getRouteMatches();
+        $user = $this->context->getSession()->get('user');
+
+        die("TODO: Request, application/json, json_decode, save it.");
+
+        $credentialsRepository = $this->context->getDatabaseRepository('ZBurgermeiszter:PWManager:Credentials');
+        //$credential = $credentialsRepository->updateCredentials($user, );
+
+        if (!$credential) {
+            return $this->context->setResponse($response = JSONResponse::createFinal([], 403));
+        }
+
+        return $this->context->setResponse($response = JSONResponse::createFinal($credential));
+    }
+
 }
