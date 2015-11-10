@@ -10,7 +10,8 @@ use ZBurgermeiszter\PWManager\DatabaseRepositories\UsersRepository;
 class AuthMiddleware extends AbstractRouteControllerMiddleware
 {
     protected static $preRoute = [
-        '/credentials'
+        '/credentials',
+        '/\/credentials\/(\d+)/'
     ];
 
     protected function http()

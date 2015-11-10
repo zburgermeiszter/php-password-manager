@@ -45,4 +45,21 @@ class CredentialsRepository extends AbstractDatabaseRepository
 
     }
 
+    public function getCredential(User $user, $credentialID)
+    {
+        $sql = "SELECT `id`, `site`, `username`, `password`
+                FROM `credentials`
+                WHERE `user` = ?
+                AND id = ?
+                LIMIT 1";
+
+        $credentialArray = $this->execAndFetch($sql, [$user, $credentialID]);
+
+        if (!$credentialArray) {
+            return false;
+        }
+
+        return new Credentials($credentialArray);
+    }
+
 }
