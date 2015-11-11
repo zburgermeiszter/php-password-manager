@@ -48,6 +48,11 @@ class Context {
         return $this->getRequest()->getHeader($headerName);
     }
 
+    public function getRequestContent()
+    {
+        return $this->getRequest()->getContent();
+    }
+
     /**
      * @param Response $response
      */

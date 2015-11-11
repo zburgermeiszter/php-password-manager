@@ -64,18 +64,22 @@ class CredentialsRepository extends AbstractDatabaseRepository
 
     public function updateCredentials(User $user, Credentials $credentials)
     {
-        $sql = "UPDATE `credentials` SET
+        $sql = "UPDATE `credentials`
+                SET
                 `site` = ?,
                 `username` = ?,
                 `password` = ?
-                WHERE `credentials`.`id` = ?;
+                WHERE
+                `credentials`.`id` = ?
+                AND `user` = ?;
                 ";
 
         return $this->execUpdate($sql, [
-            $user->getId(),
             $credentials->getSite(),
             $credentials->getUsername(),
-            $credentials->getPassword()
+            $credentials->getPassword(),
+            $credentials->getId(),
+            $user->getId()
         ]);
 
     }

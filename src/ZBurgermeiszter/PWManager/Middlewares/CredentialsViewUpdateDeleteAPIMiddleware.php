@@ -5,6 +5,7 @@ namespace ZBurgermeiszter\PWManager\Middlewares;
 use ZBurgermeiszter\App\Abstracts\AbstractRouteControllerMiddleware;
 use ZBurgermeiszter\HTTP\JSONResponse;
 use ZBurgermeiszter\PWManager\DatabaseRepositories\CredentialsRepository;
+use ZBurgermeiszter\PWManager\DataStructures\Credentials;
 
 class CredentialsViewUpdateDeleteAPIMiddleware extends AbstractRouteControllerMiddleware
 {
@@ -39,17 +40,19 @@ class CredentialsViewUpdateDeleteAPIMiddleware extends AbstractRouteControllerMi
 
         $matches = $this->getRouteMatches();
         $user = $this->context->getSession()->get('user');
+        $requestContent = $this->context->getRequestContent();
 
-        die("TODO: Request, application/json, json_decode, save it.");
+        $credentials = new Credentials($requestContent);
+        $credentials->setId($matches[0]);
 
         $credentialsRepository = $this->context->getDatabaseRepository('ZBurgermeiszter:PWManager:Credentials');
-        //$credential = $credentialsRepository->updateCredentials($user, );
+        $credentialUpdate = $credentialsRepository->updateCredentials($user, $credentials);
 
-        if (!$credential) {
-            return $this->context->setResponse($response = JSONResponse::createFinal([], 403));
+        if (!$credentialUpdate) {
+            return $this->context->setResponse($response = JSONResponse::createFinal([], 500));
         }
 
-        return $this->context->setResponse($response = JSONResponse::createFinal($credential));
+        return $this->context->setResponse($response = JSONResponse::createFinal([]));
     }
 
 }
