@@ -71,13 +71,29 @@ class CredentialsRepository extends AbstractDatabaseRepository
                 `password` = ?
                 WHERE
                 `credentials`.`id` = ?
-                AND `user` = ?;
+                AND `user` = ?
+                LIMIT 1
                 ";
 
         return $this->execUpdate($sql, [
             $credentials->getSite(),
             $credentials->getUsername(),
             $credentials->getPassword(),
+            $credentials->getId(),
+            $user->getId()
+        ]);
+
+    }
+
+    public function deleteCredentials(User $user, Credentials $credentials)
+    {
+        $sql = "DELETE FROM `credentials`
+                WHERE `id` = ?
+                AND `user` = ?
+                LIMIT 1
+                ";
+
+        return $this->execUpdate($sql, [
             $credentials->getId(),
             $user->getId()
         ]);
