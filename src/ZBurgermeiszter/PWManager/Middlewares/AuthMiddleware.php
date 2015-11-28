@@ -5,7 +5,7 @@ namespace ZBurgermeiszter\PWManager\Middlewares;
 use ZBurgermeiszter\App\Abstracts\AbstractRouteControllerMiddleware;
 use ZBurgermeiszter\App\Services\ConfigurationService;
 use ZBurgermeiszter\HTTP\JSONResponse;
-use ZBurgermeiszter\PWManager\DatabaseRepositories\UsersRepository;
+use ZBurgermeiszter\PWManager\DatabaseRepositories\SessionsRepository;
 
 class AuthMiddleware extends AbstractRouteControllerMiddleware
 {
@@ -17,12 +17,12 @@ class AuthMiddleware extends AbstractRouteControllerMiddleware
     protected function http()
     {
         /**
-         * @var $userRepository UsersRepository
+         * @var $sessionRepository SessionsRepository
          */
-        $userRepository = $this->context->getDatabaseRepository('ZBurgermeiszter:PWManager:Users');
+        $sessionRepository = $this->context->getDatabaseRepository('ZBurgermeiszter:PWManager:Sessions');
 
         $token = $this->context->getRequest()->getHeader('X-Token');
-        $user = $userRepository->getUserByToken($token);
+        $user = $sessionRepository->getUserByToken($token);
 
         if (!$user) {
             return $this->context->setResponse(JSONResponse::createFinal([
@@ -40,13 +40,13 @@ class AuthMiddleware extends AbstractRouteControllerMiddleware
     private function updateValidUntil($token)
     {
         /**
-         * @var $userRepository UsersRepository
+         * @var $sessionRepository SessionsRepository
          * @var $configService ConfigurationService
          */
         $configService = $this->context->getServiceRepository()->getService('config');
         $sessionConfig = $configService->get('session');
 
-        $userRepository = $this->context->getDatabaseRepository('ZBurgermeiszter:PWManager:Users');
+        $sessionRepository = $this->context->getDatabaseRepository('ZBurgermeiszter:PWManager:Sessions');
 
         $validityDays = 0;
         if (array_key_exists('token_validity_days', $sessionConfig)) {
@@ -55,7 +55,7 @@ class AuthMiddleware extends AbstractRouteControllerMiddleware
 
         $validUntil = new \DateTime("+$validityDays days");
 
-        $userRepository->updateToken($token, $validUntil);
+        $sessionRepository->updateToken($token, $validUntil);
     }
 
 }

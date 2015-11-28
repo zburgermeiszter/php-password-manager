@@ -6,21 +6,42 @@ use ZBurgermeiszter\App\Abstracts\AbstractRouteControllerMiddleware;
 use ZBurgermeiszter\App\Services\ConfigurationService;
 use ZBurgermeiszter\HTTP\JSONResponse;
 use ZBurgermeiszter\HTTP\Response;
+use ZBurgermeiszter\PWManager\DatabaseRepositories\SessionsRepository;
 use ZBurgermeiszter\PWManager\DatabaseRepositories\UsersRepository;
 
-class LoginMiddleware extends AbstractRouteControllerMiddleware
+class SessionHandlerMiddleware extends AbstractRouteControllerMiddleware
 {
-    protected static $route = '/login';
+    protected static $route = '/session';
 
-    protected function http()
+    // Login
+    protected function httpPOST()
     {
         $authHeader = $this->context->getRequestHeader('Authorization');
 
-        $credentials = $this->extractCredentialsFromBasicAuth($authHeader);
+        $credentials = $this->extractLoginCredentialsFromBasicAuth($authHeader);
 
-        $response = $this->authenticateCredentials($credentials);
+        $response = $this->authenticateUser($credentials);
 
         $this->context->setResponse($response);
+    }
+
+    // Logout
+    protected function httpDELETE()
+    {
+        /**
+         * @var $sessionRepository SessionsRepository
+         */
+        $token = $this->context->getRequestHeader('X-Token');
+
+        $sessionRepository = $this->context->getDatabaseRepository('ZBurgermeiszter:PWManager:Sessions');
+
+        $destroyToken = $sessionRepository->destroyToken($token);
+
+        if (!$destroyToken) {
+            return $this->context->setResponse(JSONResponse::createFinal([], 500));
+        }
+
+        return $this->context->setResponse(JSONResponse::createFinal([], 200));
     }
 
     /**
@@ -28,9 +49,10 @@ class LoginMiddleware extends AbstractRouteControllerMiddleware
      * @return Response
      * @throws \Exception
      */
-    private function authenticateCredentials($credentials)
+    private function authenticateUser($credentials)
     {
         /**
+         * @var $sessionRepository SessionsRepository
          * @var $userRepository UsersRepository
          * @var $configService ConfigurationService
          */
@@ -45,7 +67,7 @@ class LoginMiddleware extends AbstractRouteControllerMiddleware
             return JSONResponse::createFinal([], 403);
         };
 
-        $userRepository = $this->context->getDatabaseRepository('ZBurgermeiszter:PWManager:Users');
+        $sessionRepository = $this->context->getDatabaseRepository('ZBurgermeiszter:PWManager:Sessions');
 
         $configService = $this->context->getServiceRepository()->getService('config');
         $sessionConfig = $configService->get('session');
@@ -57,7 +79,14 @@ class LoginMiddleware extends AbstractRouteControllerMiddleware
 
         $validUntil = new \DateTime("+$validityDays days");
 
-        $session = $userRepository->createSession($credentials['user'], $credentials['pass'], $validUntil);
+        $userRepository = $this->context->getDatabaseRepository('ZBurgermeiszter:PWManager:Users');
+        $user = $userRepository->getUser($credentials['user'], $credentials['pass']);
+
+        if (!$user) {
+            throw new \Exception("User not found:" . $credentials['user']);
+        }
+
+        $session = $sessionRepository->createSession($user, $validUntil);
 
         $responseCode = $session ? 200 : 403;
 
@@ -65,7 +94,7 @@ class LoginMiddleware extends AbstractRouteControllerMiddleware
 
     }
 
-    private function extractCredentialsFromBasicAuth($authHeader)
+    private function extractLoginCredentialsFromBasicAuth($authHeader)
     {
         list($authType, $authContent) = explode(' ', $authHeader);
 
